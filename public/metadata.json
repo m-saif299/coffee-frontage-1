@@ -1,0 +1,7 @@
+{
+  "name": "واجهة القهوة",
+  "description": "A smart directory for discovering specialty coffee shops with AI-powered recommendations, reviews, and map integration.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
