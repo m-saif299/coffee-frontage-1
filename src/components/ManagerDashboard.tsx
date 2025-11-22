@@ -1,7 +1,14 @@
-
-import React from 'react';
-import { Cafe } from '../types';
-import { LogOut, Edit, Eye, TrendingUp, Star, Users, UtensilsCrossed } from 'lucide-react';
+import React from "react";
+import {
+  ArrowLeft,
+  Coffee,
+  DollarSign,
+  Edit3,
+  Eye,
+  MapPin,
+  Star,
+} from "lucide-react";
+import { Cafe } from "../types";
 
 interface ManagerDashboardProps {
   cafe: Cafe;
@@ -10,128 +17,220 @@ interface ManagerDashboardProps {
   onBack: () => void;
 }
 
-export const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ cafe, onEdit, onPreview, onBack }) => {
+export const ManagerDashboard: React.FC<ManagerDashboardProps> = ({
+  cafe,
+  onEdit,
+  onPreview,
+  onBack,
+}) => {
+  // نحمي أنفسنا من undefined
+  const reviews = cafe.reviews || [];
+  const menu = cafe.menu || [];
+  const features = cafe.features || [];
+  const amenities = cafe.amenities || [];
+  const coffeeTypes = cafe.coffeeTypes || [];
+
+  const reviewsCount = reviews.length;
+
+  const priceLabel =
+    cafe.priceLevel === "High"
+      ? "مرتفع"
+      : cafe.priceLevel === "Low"
+      ? "منخفض"
+      : "متوسط";
+
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 py-4 px-6 shadow-sm">
-            <div className="max-w-7xl mx-auto flex justify-between items-center">
-                <div className="flex items-center gap-3">
-                    <h1 className="text-xl font-bold text-coffee-900">لوحة تحكم المقهى</h1>
-                    <span className="bg-coffee-100 px-2 py-1 rounded text-xs font-bold text-coffee-700">{cafe.name}</span>
-                </div>
-                <button onClick={onBack} className="text-sm text-gray-500 hover:text-red-600 flex items-center gap-2 transition-colors">
-                    <LogOut size={16} />
-                    تسجيل خروج
-                </button>
+    <div className="flex flex-col min-h-screen bg-coffee-50">
+      {/* Top Bar */}
+      <header className="bg-white border-b border-coffee-100 sticky top-0 z-20">
+        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+          <button
+            onClick={onBack}
+            className="flex items-center gap-2 text-coffee-700 hover:text-coffee-900"
+          >
+            <ArrowLeft size={18} />
+            <span className="text-sm font-bold">رجوع للواجهة</span>
+          </button>
+
+          <div className="flex items-center gap-2">
+            <span className="text-xs bg-coffee-100 text-coffee-800 px-2 py-1 rounded-md font-bold">
+              مدير مقهى
+            </span>
+          </div>
+        </div>
+      </header>
+
+      <main className="flex-1 max-w-6xl mx-auto px-4 py-6 space-y-6">
+        {/* عنوان المقهى */}
+        <section className="bg-white rounded-2xl shadow-sm border border-coffee-100 p-4 sm:p-6 flex flex-col sm:flex-row gap-4 sm:gap-6">
+          <div className="w-full sm:w-48 h-40 sm:h-32 rounded-xl overflow-hidden bg-coffee-100 flex-shrink-0">
+            {cafe.imageUrl ? (
+              <img
+                src={cafe.imageUrl}
+                alt={cafe.name}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-coffee-400">
+                <Coffee size={32} />
+              </div>
+            )}
+          </div>
+
+          <div className="flex-1 flex flex-col justify-between gap-3">
+            <div>
+              <h1 className="text-2xl font-black text-coffee-900 mb-1">
+                {cafe.name}
+              </h1>
+              <div className="flex flex-wrap items-center gap-2 text-xs text-coffee-700">
+                <MapPin size={14} />
+                <span>{cafe.location}</span>
+              </div>
             </div>
-        </header>
 
-        <main className="flex-1 max-w-7xl mx-auto w-full p-6">
-            
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
-                    <div>
-                        <p className="text-gray-500 text-sm mb-1">إجمالي المشاهدات</p>
-                        <h3 className="text-3xl font-bold text-coffee-900">1,254</h3>
-                    </div>
-                    <div className="bg-blue-50 p-3 rounded-xl text-blue-600">
-                        <TrendingUp size={24} />
-                    </div>
-                </div>
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
-                    <div>
-                        <p className="text-gray-500 text-sm mb-1">متوسط التقييم</p>
-                        <h3 className="text-3xl font-bold text-coffee-900">{cafe.rating.toFixed(1)}</h3>
-                    </div>
-                    <div className="bg-yellow-50 p-3 rounded-xl text-yellow-500">
-                        <Star size={24} fill="currentColor" />
-                    </div>
-                </div>
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
-                    <div>
-                        <p className="text-gray-500 text-sm mb-1">عدد التعليقات</p>
-                        <h3 className="text-3xl font-bold text-coffee-900">{cafe.reviews.length}</h3>
-                    </div>
-                    <div className="bg-purple-50 p-3 rounded-xl text-purple-600">
-                        <Users size={24} />
-                    </div>
-                </div>
+            <div className="flex flex-wrap gap-2 mt-2">
+              <span className="inline-flex items-center gap-1 text-xs bg-coffee-100 text-coffee-800 px-2 py-1 rounded-full">
+                <Star size={14} className="text-yellow-500" />
+                <span>{cafe.rating?.toFixed(1) || "5.0"}</span>
+              </span>
+              <span className="inline-flex items-center gap-1 text-xs bg-coffee-50 text-coffee-700 px-2 py-1 rounded-full">
+                <DollarSign size={14} />
+                <span>{priceLabel}</span>
+              </span>
+              {cafe.isOpen && (
+                <span className="inline-flex items-center gap-1 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                  <span className="w-2 h-2 rounded-full bg-green-500" />
+                  مفتوح الآن
+                </span>
+              )}
             </div>
+          </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Quick Actions */}
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                    <h3 className="text-lg font-bold text-coffee-900 mb-4">إدارة المحتوى</h3>
-                    <div className="space-y-3">
-                        <button 
-                            onClick={onEdit}
-                            className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors group"
-                        >
-                            <div className="flex items-center gap-3">
-                                <div className="bg-white p-2 rounded-lg shadow-sm text-coffee-600">
-                                    <Edit size={20} />
-                                </div>
-                                <div className="text-right">
-                                    <div className="font-bold text-gray-900">تعديل بيانات المقهى</div>
-                                    <div className="text-xs text-gray-500">الصور، الوصف، الموقع، الخدمات</div>
-                                </div>
-                            </div>
-                            <div className="text-coffee-600 opacity-0 group-hover:opacity-100 transition-opacity font-bold text-sm">تعديل</div>
-                        </button>
+          <div className="flex flex-col gap-2 justify-between">
+            <button
+              onClick={onPreview}
+              className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-sm font-bold border border-coffee-200 text-coffee-800 hover:bg-coffee-50 transition-colors"
+            >
+              <Eye size={16} />
+              عرض صفحة المقهى
+            </button>
 
-                        <button 
-                            onClick={onEdit} // Re-use edit modal which has menu tab
-                            className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors group"
-                        >
-                            <div className="flex items-center gap-3">
-                                <div className="bg-white p-2 rounded-lg shadow-sm text-coffee-600">
-                                    <UtensilsCrossed size={20} />
-                                </div>
-                                <div className="text-right">
-                                    <div className="font-bold text-gray-900">تحديث قائمة الطعام</div>
-                                    <div className="text-xs text-gray-500">الأسعار، الأصناف، صور المنتجات</div>
-                                </div>
-                            </div>
-                            <div className="text-coffee-600 opacity-0 group-hover:opacity-100 transition-opacity font-bold text-sm">إدارة</div>
-                        </button>
+            <button
+              onClick={onEdit}
+              className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-sm font-bold bg-coffee-600 text-white hover:bg-coffee-700 transition-colors"
+            >
+              <Edit3 size={16} />
+              تعديل بيانات المقهى
+            </button>
+          </div>
+        </section>
 
-                        <button 
-                            onClick={onPreview}
-                            className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors group"
-                        >
-                            <div className="flex items-center gap-3">
-                                <div className="bg-white p-2 rounded-lg shadow-sm text-coffee-600">
-                                    <Eye size={20} />
-                                </div>
-                                <div className="text-right">
-                                    <div className="font-bold text-gray-900">معاينة الواجهة</div>
-                                    <div className="text-xs text-gray-500">مشاهدة صفحة المقهى كما يراها العميل</div>
-                                </div>
-                            </div>
-                            <div className="text-coffee-600 opacity-0 group-hover:opacity-100 transition-opacity font-bold text-sm">عرض</div>
-                        </button>
-                    </div>
-                </div>
-
-                {/* Recent Activity / Preview */}
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                    <h3 className="text-lg font-bold text-coffee-900 mb-4">نظرة عامة</h3>
-                    <div className="rounded-xl overflow-hidden border border-gray-100 relative group">
-                        <img src={cafe.imageUrl} alt={cafe.name} className="w-full h-48 object-cover filter grayscale group-hover:grayscale-0 transition-all duration-500" />
-                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 text-white">
-                            <h4 className="font-bold text-lg">{cafe.name}</h4>
-                            <p className="text-sm opacity-80 line-clamp-1">{cafe.description}</p>
-                        </div>
-                    </div>
-                    <div className="mt-4 text-sm text-gray-500">
-                        <p>آخر تحديث للبيانات: <span className="font-bold text-gray-700">اليوم</span></p>
-                        <p>حالة المقهى: <span className={`font-bold ${cafe.isOpen ? 'text-green-600' : 'text-red-600'}`}>{cafe.isOpen ? 'مفتوح للزوار' : 'مغلق حالياً'}</span></p>
-                    </div>
-                </div>
+        {/* إحصائيات سريعة */}
+        <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="bg-white rounded-2xl shadow-sm border border-coffee-100 p-4 flex flex-col gap-2">
+            <p className="text-xs text-coffee-500">متوسط التقييم</p>
+            <div className="flex items-center gap-2">
+              <h3 className="text-3xl font-bold text-coffee-900">
+                {cafe.rating?.toFixed(1) || "5.0"}
+              </h3>
+              <Star size={18} className="text-yellow-500" />
             </div>
-        </main>
+            <p className="text-[11px] text-coffee-500">
+              من {reviewsCount} تقييم
+            </p>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-sm border border-coffee-100 p-4 flex flex-col gap-2">
+            <p className="text-xs text-coffee-500">عدد التقييمات</p>
+            <h3 className="text-3xl font-bold text-coffee-900">
+              {reviewsCount}
+            </h3>
+            <p className="text-[11px] text-coffee-500">
+              اجمع تقييمات أكثر من عملائك
+            </p>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-sm border border-coffee-100 p-4 flex flex-col gap-2">
+            <p className="text-xs text-coffee-500">عدد أصناف المنيو</p>
+            <h3 className="text-3xl font-bold text-coffee-900">
+              {menu.length}
+            </h3>
+            <p className="text-[11px] text-coffee-500">
+              تأكد من تحديث الأسعار والأصناف بشكل مستمر
+            </p>
+          </div>
+        </section>
+
+        {/* التفاصيل / المميزات */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-white rounded-2xl shadow-sm border border-coffee-100 p-4 space-y-3">
+            <h3 className="text-sm font-bold text-coffee-900 mb-1">
+              المميزات والخدمات
+            </h3>
+
+            {features.length === 0 &&
+              amenities.length === 0 &&
+              coffeeTypes.length === 0 && (
+                <p className="text-xs text-coffee-500">
+                  لم يتم تحديد المميزات. يمكنك إضافتها من شاشة تعديل بيانات
+                  المقهى.
+                </p>
+              )}
+
+            <div className="flex flex-wrap gap-2">
+              {features.map((f) => (
+                <span
+                  key={`feature-${f}`}
+                  className="text-[11px] px-2 py-1 rounded-full bg-coffee-50 text-coffee-800 border border-coffee-100"
+                >
+                  {f}
+                </span>
+              ))}
+
+              {amenities.map((a) => (
+                <span
+                  key={`amenity-${a}`}
+                  className="text-[11px] px-2 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-100"
+                >
+                  {a}
+                </span>
+              ))}
+
+              {coffeeTypes.map((t) => (
+                <span
+                  key={`coffee-${t}`}
+                  className="text-[11px] px-2 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-100"
+                >
+                  {t}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-sm border border-coffee-100 p-4 space-y-3">
+            <h3 className="text-sm font-bold text-coffee-900 mb-1">
+              لمحة عن المنيو
+            </h3>
+
+            {menu.length === 0 ? (
+              <p className="text-xs text-coffee-500">
+                لم يتم إضافة أصناف للمنيو بعد.
+              </p>
+            ) : (
+              <ul className="space-y-2 max-h-40 overflow-y-auto">
+                {menu.slice(0, 6).map((item) => (
+                  <li key={item.name} className="flex justify-between text-xs">
+                    <span className="text-coffee-900 font-medium">
+                      {item.name}
+                    </span>
+                    <span className="text-coffee-600">{item.price}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </section>
+      </main>
     </div>
   );
 };
