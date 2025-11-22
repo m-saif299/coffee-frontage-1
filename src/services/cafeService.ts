@@ -1,8 +1,6 @@
 import { supabase } from "../lib/supabase";
 
-/**
- * Get all cafes
- */
+// جلب جميع المقاهي
 export const getCafes = async () => {
   const { data, error } = await supabase
     .from("cafes")
@@ -17,14 +15,12 @@ export const getCafes = async () => {
   return data;
 };
 
-/**
- * Get cafes filtered by city (required by App.tsx)
- */
+// جلب المقاهي حسب المدينة
 export const getCafesByCity = async (city: string) => {
   const { data, error } = await supabase
     .from("cafes")
     .select("*")
-    .ilike("location", `%${city}%`)
+    .ilike("city", `%${city}%`)
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -35,9 +31,7 @@ export const getCafesByCity = async (city: string) => {
   return data;
 };
 
-/**
- * Add a new cafe
- */
+// إضافة مقهى
 export const addCafe = async (cafe) => {
   const { data, error } = await supabase
     .from("cafes")
@@ -52,9 +46,7 @@ export const addCafe = async (cafe) => {
   return data[0];
 };
 
-/**
- * Update an existing cafe
- */
+// تعديل مقهى
 export const updateCafe = async (id, updates) => {
   const { data, error } = await supabase
     .from("cafes")
@@ -70,9 +62,7 @@ export const updateCafe = async (id, updates) => {
   return data[0];
 };
 
-/**
- * Delete a cafe
- */
+// حذف مقهى
 export const deleteCafe = async (id) => {
   const { error } = await supabase
     .from("cafes")
