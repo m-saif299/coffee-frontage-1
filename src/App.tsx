@@ -112,6 +112,20 @@ export default function App() {
     setEditingCafe(null);
   };
 
+
+  const handleEditCafe = (cafe: Cafe) => {
+  setEditingCafe(cafe);
+  setIsAddModalOpen(true);
+
+  // نرجّع صفحة التعديل لواجهة مناسبة
+  if (currentUser.role === "ADMIN") {
+    setViewState(ViewState.ADMIN_DASHBOARD);
+  } else if (currentUser.role === "MANAGER") {
+    setViewState(ViewState.MANAGER_DASHBOARD);
+  }
+};
+
+
   const handleOpenAddModal = () => {
     setEditingCafe(null);
     setIsAddModalOpen(true);
