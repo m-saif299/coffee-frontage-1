@@ -1,7 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useRef, useEffect } from 'react';
 import { X, Plus, Loader2, Upload, Trash2, Image as ImageIcon, MapPin } from 'lucide-react';
-import { generateCafeDescription } from '../services/geminiService';
 import { SAUDI_LOCATIONS } from '../data/saudiLocations';
 export const AddCafeModal = ({ onClose, onSave, initialData }) => {
     const [name, setName] = useState(initialData?.name || '');
@@ -89,7 +88,6 @@ export const AddCafeModal = ({ onClose, onSave, initialData }) => {
         // Only generate if empty and not editing (or explicitly requested)
         if (!finalDescription && !isEditing) {
             setIsGenerating(true);
-            finalDescription = await generateCafeDescription(name, finalLocation);
             setIsGenerating(false);
         }
         const cafeData = {
